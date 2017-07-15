@@ -1,0 +1,9 @@
+## Interface: 20400
+## Title: |cffbfb6a8chronoUI|r
+## Author: DWG
+## Notes: A modern looking User Interface.
+## Version: 0.1
+## SavedVariables: chronoUI_profiles, chronoUI_playerDB
+## SavedVariablesPerCharacter: chronoUI_config, chronoUI_init
+
+chronoUI.lua
