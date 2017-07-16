@@ -25,18 +25,26 @@ local function AngledBar_Create(self)
     
     local barWidth = 512;
     local barHeight = 32;
+    
+    local barTexture = "hp-bar";
+    local overlayTexture = "hp-bar-border";
+    
+    if self.flipBar then
+        barTexture = barTexture.."-flipped";
+        overlayTexture = overlayTexture.."-flipped";
+    end
 
-    f.background = makeTex("BACKGROUND", barWidth, barHeight, "hp-bar");
+    f.background = makeTex("BACKGROUND", barWidth, barHeight, barTexture);
     f.background:SetPoint("CENTER", f);
     if self.invertColors then
         f.background:SetVertexColor(0.498, 0.0, 0.0, alpha);
     end
 
-    f.overlay = makeTex("OVERLAY", barWidth, barHeight, "hp-bar-border");
+    f.overlay = makeTex("OVERLAY", barWidth, barHeight, overlayTexture);
     f.overlay:SetPoint("CENTER", f);
     f.overlay:SetVertexColor(0, 0, 0,alpha);
     
-    f.bar = makeTex("BORDER", barWidth, barHeight, "hp-bar");
+    f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
     f.bar:SetPoint("RIGHT", f.background);
     if not self.invertColors then
         f.bar:SetVertexColor(0.498, 0.0, 0.0, alpha);
@@ -48,13 +56,15 @@ end
 -- Creates and returns a new AngledBar
 -- invertColors: Inverts the colors of the forground and the background
 -- leftToRightGrowth: The bar grows from left to right
-function AngledBar:new(invertColors, leftToRightGrowth)
+-- flipBar: Flips the bar horizontally
+function AngledBar:new(invertColors, leftToRightGrowth, flipBar)
     local object = {};
     setmetatable(object, self);
     self.__index = self;
     
     object.invertColors = invertColors or false;
     object.leftToRightGrowth = leftToRightGrowth or false;
+    object.flipBar = flipBar or false;
     AngledBar_Create(object);
     
     return object;
