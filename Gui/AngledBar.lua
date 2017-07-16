@@ -3,6 +3,7 @@ local AngledBar = Gui.AngledBar or {};
 Gui.AngledBar = AngledBar;
 chronoUI.Gui = Gui;
 
+-- Creates an AngledBar and writes it to self.frame
 local function AngledBar_Create(self)
     local makeTex = function(layer, width, height, texture)
         local clr = 0.1294117647058824;
@@ -19,10 +20,7 @@ local function AngledBar_Create(self)
     f:SetFrameStrata("BACKGROUND");
     f:SetHeight(64);
     f:SetWidth(512);
-    --f:SetPoint("CENTER", UIParent, "CENTER", -360, 0);
-    --f:SetPoint("CENTER", UIParent, "CENTER", 0, 0);
     f:SetScale(0.6);
-    --f:SetScale(4);
     self.frame = f;
     
     local barWidth = 512;
