@@ -3,6 +3,11 @@ local AngledBar = Gui.AngledBar or {};
 Gui.AngledBar = AngledBar;
 chronoUI.Gui = Gui;
 
+-- The size of the bar textures
+local barWidth = 512;
+-- The size of the small bar textures
+local smallBarWidth = 438;
+
 -- Creates an AngledBar and writes it to self.frame
 -- name: The name of the AngledBar. Must be set if the user can place this frame
 local function AngledBar_Create(self, name)
@@ -11,7 +16,7 @@ local function AngledBar_Create(self, name)
         t:SetHeight(height);
         t:SetWidth(width);
         t:SetTexture("Interface\\Addons\\chronoUI\\img\\"..texture);
-        if self.invertColors then
+        if self.invertColors or self.leftToRightGrowth then
             t:SetVertexColor(self.foregroundColor[1], self.foregroundColor[2], self.foregroundColor[3], self.foregroundColor[4]);
         else
             t:SetVertexColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], self.backgroundColor[4]);
@@ -19,7 +24,6 @@ local function AngledBar_Create(self, name)
         return t;
     end
     
-    local barWidth = 512;
     local barHeight = 32;
     
     local f = CreateFrame("Frame", name, UIParent);
@@ -53,7 +57,7 @@ local function AngledBar_Create(self, name)
     
     f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
     f.bar:SetPoint("RIGHT", f.background);
-    if self.invertColors then
+    if self.invertColors or self.leftToRightGrowth then
         f.bar:SetVertexColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], self.backgroundColor[4]);
     else
         f.bar:SetVertexColor(self.foregroundColor[1], self.foregroundColor[2], self.foregroundColor[3], self.foregroundColor[4]);
@@ -69,16 +73,18 @@ end
 -- flipBar: Flips the bar horizontally. Defaults to false
 -- isShort: Uses the shorter bar texture if set. Defaults to false
 function AngledBar:new(name, foregroundColor, backgroundColor, invertColors, leftToRightGrowth, flipBar, isShort)
-    local object = {};
+    local object = {
+        foregroundColor = foregroundColor or {0.129, 0.129, 0.129, 1.000},
+        backgroundColor = backgroundColor or {0.498, 0.000, 0.000, 1.000},
+        invertColors = invertColors or false,
+        leftToRightGrowth = leftToRightGrowth or false,
+        flipBar = flipBar or false,
+        isShort = isShort or false,
+    };
+    
     setmetatable(object, self);
     self.__index = self;
     
-    object.foregroundColor = foregroundColor or {0.129, 0.129, 0.129, 1.000};
-    object.backgroundColor = backgroundColor or {0.498, 0.000, 0.000, 1.000};
-    object.invertColors = invertColors or false;
-    object.leftToRightGrowth = leftToRightGrowth or false;
-    object.flipBar = flipBar or false;
-    self.isShort = isShort or false;
     AngledBar_Create(object, name, isShort);
     
     return object;
@@ -86,10 +92,19 @@ end
 
 -- Moves the bar to the given percentage
 function AngledBar:SetBarPercentage(pct)
-    local newWidth = pct / 100;
+    local width = barWidth;
+    local missing = 0;
+    
+    if self.isShort then
+        width = smallBarWidth;
+        missing = (barWidth - smallBarWidth) / barWidth;
+    end
+    
+    local relativeWidth = width / barWidth;
+    local newWidth = relativeWidth * pct / 100 + missing;
     
     if self.leftToRightGrowth then
-        newWidth = (100 - pct) / 100;
+        newWidth = relativeWidth * (100 - pct) / 100 + missing;
     end
     
     self.frame.bar:SetTexCoordModifiesRect(true);
