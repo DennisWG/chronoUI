@@ -47,14 +47,14 @@ end
 
 -- Creates and returns a new AngledBar
 -- invertColors: Inverts the colors of the forground and the background
--- leftToRight: The bar grows from left to right
-function AngledBar:new(invertColors, leftToRight)
+-- leftToRightGrowth: The bar grows from left to right
+function AngledBar:new(invertColors, leftToRightGrowth)
     local object = {};
     setmetatable(object, self);
     self.__index = self;
     
     object.invertColors = invertColors or false;
-    object.leftToRight = leftToRight or false;
+    object.leftToRightGrowth = leftToRightGrowth or false;
     AngledBar_Create(object);
     
     return object;
@@ -64,7 +64,7 @@ end
 function AngledBar:SetBarPercentage(pct)
     local newWidth = pct / 100;
     
-    if self.leftToRight then
+    if self.leftToRightGrowth then
         newWidth = (100 - pct) / 100;
     end
     
