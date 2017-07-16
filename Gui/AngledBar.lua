@@ -4,6 +4,7 @@ Gui.AngledBar = AngledBar;
 chronoUI.Gui = Gui;
 
 -- Creates an AngledBar and writes it to self.frame
+-- name: The name of the AngledBar. Must be set if the user can place this frame
 local function AngledBar_Create(self, name)
     local makeTex = function(layer, width, height, texture)
         local t = self.frame:CreateTexture(nil, layer);
@@ -18,21 +19,25 @@ local function AngledBar_Create(self, name)
         return t;
     end
     
+    local barWidth = 512;
+    local barHeight = 32;
+    
     local f = CreateFrame("Frame", name, UIParent);
     f:SetFrameStrata("BACKGROUND");
-    f:SetHeight(64);
-    f:SetWidth(512);
-    f:SetScale(0.6);
+    f:SetHeight(barHeight + 10);
+    f:SetWidth(barWidth);
     f:RegisterForDrag("LeftButton");
     f:SetScript("OnDragStart", f.StartMoving);
     f:SetScript("OnDragStop", f.StopMovingOrSizing);
     self.frame = f;
     
-    local barWidth = 512;
-    local barHeight = 32;
-    
     local barTexture = "hp-bar";
     local overlayTexture = "hp-bar-border";
+    
+    if self.isShort then
+        barTexture = barTexture.."-short";
+        overlayTexture = overlayTexture.."-short";
+    end
     
     if self.flipBar then
         barTexture = barTexture.."-flipped";
@@ -43,7 +48,7 @@ local function AngledBar_Create(self, name)
     f.background:SetPoint("CENTER", f);
 
     f.overlay = makeTex("OVERLAY", barWidth, barHeight, overlayTexture);
-    f.overlay:SetPoint("CENTER", f);
+    f.overlay:SetPoint("RIGHT", f);
     f.overlay:SetVertexColor(0, 0, 0,alpha);
     
     f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
@@ -62,7 +67,8 @@ end
 -- invertColors: Inverts the colors of the forground and the background. Defaults to false
 -- leftToRightGrowth: The bar grows from left to right. Defaults to false
 -- flipBar: Flips the bar horizontally. Defaults to false
-function AngledBar:new(name, foregroundColor, backgroundColor, invertColors, leftToRightGrowth, flipBar)
+-- isShort: Uses the shorter bar texture if set. Defaults to false
+function AngledBar:new(name, foregroundColor, backgroundColor, invertColors, leftToRightGrowth, flipBar, isShort)
     local object = {};
     setmetatable(object, self);
     self.__index = self;
@@ -72,7 +78,8 @@ function AngledBar:new(name, foregroundColor, backgroundColor, invertColors, lef
     object.invertColors = invertColors or false;
     object.leftToRightGrowth = leftToRightGrowth or false;
     object.flipBar = flipBar or false;
-    AngledBar_Create(object, name);
+    self.isShort = isShort or false;
+    AngledBar_Create(object, name, isShort);
     
     return object;
 end
