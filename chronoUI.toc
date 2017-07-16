@@ -5,7 +5,9 @@
 ## Version: 0.1
 ## SavedVariables: chronoUI_profiles
 
+# Core
 chronoUI.lua
+Gui\AngledBar.lua
 
 # Modules
 Modules\Modules.xml
