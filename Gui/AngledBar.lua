@@ -6,13 +6,15 @@ chronoUI.Gui = Gui;
 -- Creates an AngledBar and writes it to self.frame
 local function AngledBar_Create(self)
     local makeTex = function(layer, width, height, texture)
-        local clr = 0.1294117647058824;
-        local alpha = 1;
         local t = self.frame:CreateTexture(nil, layer);
         t:SetHeight(height);
         t:SetWidth(width);
         t:SetTexture("Interface\\Addons\\chronoUI\\img\\"..texture);
-        t:SetVertexColor(clr, clr, clr, alpha);
+        if self.invertColors then
+            t:SetVertexColor(self.foregroundColor[1], self.foregroundColor[2], self.foregroundColor[3], self.foregroundColor[4]);
+        else
+            t:SetVertexColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], self.backgroundColor[4]);
+        end
         return t;
     end
     
@@ -36,9 +38,6 @@ local function AngledBar_Create(self)
 
     f.background = makeTex("BACKGROUND", barWidth, barHeight, barTexture);
     f.background:SetPoint("CENTER", f);
-    if self.invertColors then
-        f.background:SetVertexColor(0.498, 0.0, 0.0, alpha);
-    end
 
     f.overlay = makeTex("OVERLAY", barWidth, barHeight, overlayTexture);
     f.overlay:SetPoint("CENTER", f);
@@ -46,22 +45,26 @@ local function AngledBar_Create(self)
     
     f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
     f.bar:SetPoint("RIGHT", f.background);
-    if not self.invertColors then
-        f.bar:SetVertexColor(0.498, 0.0, 0.0, alpha);
+    if self.invertColors then
+        f.bar:SetVertexColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], self.backgroundColor[4]);
+    else
+        f.bar:SetVertexColor(self.foregroundColor[1], self.foregroundColor[2], self.foregroundColor[3], self.foregroundColor[4]);
     end
-    
-    return f;
 end
 
 -- Creates and returns a new AngledBar
--- invertColors: Inverts the colors of the forground and the background
--- leftToRightGrowth: The bar grows from left to right
--- flipBar: Flips the bar horizontally
-function AngledBar:new(invertColors, leftToRightGrowth, flipBar)
+-- foregroundColor: The color of the foreground. Defaults to 0.129|0.129|0.129|1.000 (rgba)
+-- backgroundColor: The color of the background. Defaults to 0.498|0.000|0.000|1.000 (rgba)
+-- invertColors: Inverts the colors of the forground and the background. Defaults to false
+-- leftToRightGrowth: The bar grows from left to right. Defaults to false
+-- flipBar: Flips the bar horizontally. Defaults to false
+function AngledBar:new(foregroundColor, backgroundColor, invertColors, leftToRightGrowth, flipBar)
     local object = {};
     setmetatable(object, self);
     self.__index = self;
     
+    object.foregroundColor = foregroundColor or {0.129, 0.129, 0.129, 1.000};
+    object.backgroundColor = backgroundColor or {0.498, 0.000, 0.000, 1.000};
     object.invertColors = invertColors or false;
     object.leftToRightGrowth = leftToRightGrowth or false;
     object.flipBar = flipBar or false;
