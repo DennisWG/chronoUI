@@ -4,7 +4,7 @@ Gui.AngledBar = AngledBar;
 chronoUI.Gui = Gui;
 
 -- Creates an AngledBar and writes it to self.frame
-local function AngledBar_Create(self)
+local function AngledBar_Create(self, name)
     local makeTex = function(layer, width, height, texture)
         local t = self.frame:CreateTexture(nil, layer);
         t:SetHeight(height);
@@ -18,11 +18,14 @@ local function AngledBar_Create(self)
         return t;
     end
     
-    local f = CreateFrame("Frame", nil, UIParent);
+    local f = CreateFrame("Frame", name, UIParent);
     f:SetFrameStrata("BACKGROUND");
     f:SetHeight(64);
     f:SetWidth(512);
     f:SetScale(0.6);
+    f:RegisterForDrag("LeftButton");
+    f:SetScript("OnDragStart", f.StartMoving);
+    f:SetScript("OnDragStop", f.StopMovingOrSizing);
     self.frame = f;
     
     local barWidth = 512;
@@ -53,12 +56,13 @@ local function AngledBar_Create(self)
 end
 
 -- Creates and returns a new AngledBar
+-- name: The name of the AngledBar. Must be set if the user can place this frame
 -- foregroundColor: The color of the foreground. Defaults to 0.129|0.129|0.129|1.000 (rgba)
 -- backgroundColor: The color of the background. Defaults to 0.498|0.000|0.000|1.000 (rgba)
 -- invertColors: Inverts the colors of the forground and the background. Defaults to false
 -- leftToRightGrowth: The bar grows from left to right. Defaults to false
 -- flipBar: Flips the bar horizontally. Defaults to false
-function AngledBar:new(foregroundColor, backgroundColor, invertColors, leftToRightGrowth, flipBar)
+function AngledBar:new(name, foregroundColor, backgroundColor, invertColors, leftToRightGrowth, flipBar)
     local object = {};
     setmetatable(object, self);
     self.__index = self;
@@ -68,7 +72,7 @@ function AngledBar:new(foregroundColor, backgroundColor, invertColors, leftToRig
     object.invertColors = invertColors or false;
     object.leftToRightGrowth = leftToRightGrowth or false;
     object.flipBar = flipBar or false;
-    AngledBar_Create(object);
+    AngledBar_Create(object, name);
     
     return object;
 end
@@ -83,4 +87,27 @@ function AngledBar:SetBarPercentage(pct)
     
     self.frame.bar:SetTexCoordModifiesRect(true);
     self.frame.bar:SetTexCoord(0, newWidth, 0, 1);
+end
+
+function AngledBar:ToggleDrag()
+    if self.dragging then
+        self.dragging = false;
+        self.frame:SetBackdrop(nil);
+        
+        self.frame:SetMovable(false);
+        self.frame:EnableMouse(false);
+    else
+        self.dragging = true;
+        self.frame:SetBackdrop( { 
+            bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
+            edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+            tile = true, tileSize = 16, edgeSize = 16, 
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        });
+        
+        self.frame:SetBackdropColor(0,0,0,1);
+        
+        self.frame:SetMovable(true);
+        self.frame:EnableMouse(true);
+    end
 end
