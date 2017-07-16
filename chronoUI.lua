@@ -40,12 +40,14 @@ function Core:InitializeProfile()
         }
     };
     
+    chronoUI_profiles.current = "default";
+    
     for name, module in pairs(self.Modules) do
+        module.db = chronoUI_profiles;
+        
         local profile = module:InitializeDefaultProfile();
         chronoUI_profiles.default[name] = profile;
     end
-    
-    chronoUI_profiles.current = "default";
     
     self.db = chronoUI_profiles;
 end
