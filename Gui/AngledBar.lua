@@ -17,9 +17,9 @@ local function AngledBar_Create(self, name)
         t:SetWidth(width);
         t:SetTexture("Interface\\Addons\\chronoUI\\img\\"..texture);
         if self.invertColors or self.leftToRightGrowth then
-            t:SetVertexColor(self.foregroundColor[1], self.foregroundColor[2], self.foregroundColor[3], self.foregroundColor[4]);
+            t:SetVertexColor(unpack(self.foregroundColor));
         else
-            t:SetVertexColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], self.backgroundColor[4]);
+            t:SetVertexColor(unpack(self.backgroundColor));
         end
         return t;
     end
@@ -58,28 +58,29 @@ local function AngledBar_Create(self, name)
     f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
     f.bar:SetPoint("RIGHT", f.background);
     if self.invertColors or self.leftToRightGrowth then
-        f.bar:SetVertexColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], self.backgroundColor[4]);
+        f.bar:SetVertexColor(unpack(self.backgroundColor));
     else
-        f.bar:SetVertexColor(self.foregroundColor[1], self.foregroundColor[2], self.foregroundColor[3], self.foregroundColor[4]);
+        f.bar:SetVertexColor(unpack(self.foregroundColor));
     end
 end
 
 -- Creates and returns a new AngledBar
 -- name: The name of the AngledBar. Must be set if the user can place this frame
--- foregroundColor: The color of the foreground. Defaults to 0.129|0.129|0.129|1.000 (rgba)
--- backgroundColor: The color of the background. Defaults to 0.498|0.000|0.000|1.000 (rgba)
--- invertColors: Inverts the colors of the forground and the background. Defaults to false
--- leftToRightGrowth: The bar grows from left to right. Defaults to false
--- flipBar: Flips the bar horizontally. Defaults to false
--- isShort: Uses the shorter bar texture if set. Defaults to false
-function AngledBar:new(name, foregroundColor, backgroundColor, invertColors, leftToRightGrowth, flipBar, isShort)
+-- creationParams.foregroundColor: The color of the foreground. Defaults to 0.129|0.129|0.129|1.000 (rgba)
+-- creationParams.backgroundColor: The color of the background. Defaults to 0.498|0.000|0.000|1.000 (rgba)
+-- creationParams.invertColors: Inverts the colors of the forground and the background. Defaults to false
+-- creationParams.leftToRight: The bar grows from left to right. Defaults to false
+-- creationParams.flipBar: Flips the bar horizontally. Defaults to false
+-- creationParams.isShort: Uses the shorter bar texture if set. Defaults to false
+function AngledBar:new(name, creationParams)
+    local creationParams = creationParams or {};
     local object = {
-        foregroundColor = foregroundColor or {0.129, 0.129, 0.129, 1.000},
-        backgroundColor = backgroundColor or {0.498, 0.000, 0.000, 1.000},
-        invertColors = invertColors or false,
-        leftToRightGrowth = leftToRightGrowth or false,
-        flipBar = flipBar or false,
-        isShort = isShort or false,
+        foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000},
+        backgroundColor = creationParams.backgroundColor or {0.498, 0.000, 0.000, 1.000},
+        invertColors = creationParams.invertColors or false,
+        leftToRightGrowth = creationParams.leftToRightGrowth or false,
+        flipBar = creationParams.flipBar or false,
+        isShort = creationParams.isShort or false,
     };
     
     setmetatable(object, self);
