@@ -16,7 +16,7 @@ local function AngledBar_Create(self, name, creationParams)
         t:SetHeight(height);
         t:SetWidth(width);
         t:SetTexture("Interface\\Addons\\chronoUI\\img\\"..texture);
-        if creationParams.invertColors or creationParams.leftToRightGrowth then
+        if creationParams.invertColors or creationParams.leftToRight then
             t:SetVertexColor(unpack(creationParams.foregroundColor));
         else
             t:SetVertexColor(unpack(creationParams.backgroundColor));
@@ -57,7 +57,7 @@ local function AngledBar_Create(self, name, creationParams)
     
     f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
     f.bar:SetPoint("RIGHT", f.background);
-    if creationParams.invertColors or creationParams.leftToRightGrowth then
+    if creationParams.invertColors or creationParams.leftToRight then
         f.bar:SetVertexColor(unpack(creationParams.backgroundColor));
     else
         f.bar:SetVertexColor(unpack(creationParams.foregroundColor));
@@ -80,7 +80,8 @@ function AngledBar:new(name, creationParams)
     creationParams.foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000};
     creationParams.backgroundColor = creationParams.backgroundColor or {0.498, 0.000, 0.000, 1.000};
     creationParams.invertColors = creationParams.invertColors or false;
-    creationParams.leftToRightGrowth = creationParams.leftToRight or false;
+    chronoUI:Print(creationParams.leftToRight)
+    creationParams.leftToRight = creationParams.leftToRight or false;
     creationParams.flipBar = creationParams.flipBar or false;
     creationParams.isShort = creationParams.isShort or false;
     creationParams.barTexture = creationParams.barTexture or "hp-bar";
@@ -111,10 +112,10 @@ function AngledBar:SetBarPercentage(pct)
     end
     
     local relativeWidth = width / barWidth;
-    local newWidth = relativeWidth * pct / 100 + missing;
+    local newWidth = relativeWidth * (100 - pct) / 100 + missing;
     
     if self.leftToRightGrowth then
-        newWidth = relativeWidth * (100 - pct) / 100 + missing;
+        newWidth = relativeWidth * pct / 100 + missing;
     end
     
     self.frame.bar:SetTexCoordModifiesRect(true);
