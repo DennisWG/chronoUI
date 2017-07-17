@@ -8,6 +8,7 @@
 # Core
 chronoUI.lua
 Gui\AngledBar.lua
+Gui\CastBar.lua
 
 # Modules
 Modules\Modules.xml
