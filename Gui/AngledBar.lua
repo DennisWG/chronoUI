@@ -11,16 +11,18 @@ local smallBarWidth = 438;
 -- Creates an AngledBar and writes it to self.frame
 -- name: The name of the AngledBar. Must be set if the user can place this frame
 local function AngledBar_Create(self, name, creationParams)
+    if creationParams.invertColors then
+        local tmp = creationParams.foregroundColor;
+        creationParams.foregroundColor = creationParams.backgroundColor;
+        creationParams.backgroundColor = tmp;
+    end
+    
     local makeTex = function(layer, width, height, texture)
         local t = self.frame:CreateTexture(nil, layer);
         t:SetHeight(height);
         t:SetWidth(width);
         t:SetTexture("Interface\\Addons\\chronoUI\\img\\"..texture);
-        if creationParams.invertColors or creationParams.leftToRight then
-            t:SetVertexColor(unpack(creationParams.foregroundColor));
-        else
-            t:SetVertexColor(unpack(creationParams.backgroundColor));
-        end
+        t:SetVertexColor(unpack(creationParams.backgroundColor));
         return t;
     end
     
@@ -53,15 +55,11 @@ local function AngledBar_Create(self, name, creationParams)
 
     f.overlay = makeTex("OVERLAY", barWidth, barHeight, overlayTexture);
     f.overlay:SetPoint("RIGHT", f);
-    f.overlay:SetVertexColor(0, 0, 0,alpha);
+    f.overlay:SetVertexColor(0, 0, 0, 1);
     
     f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
     f.bar:SetPoint("RIGHT", f.background);
-    if creationParams.invertColors or creationParams.leftToRight then
-        f.bar:SetVertexColor(unpack(creationParams.backgroundColor));
-    else
-        f.bar:SetVertexColor(unpack(creationParams.foregroundColor));
-    end
+    f.bar:SetVertexColor(unpack(creationParams.foregroundColor));
 end
 
 -- Creates and returns a new AngledBar
@@ -79,17 +77,13 @@ function AngledBar:new(name, creationParams)
     local creationParams = creationParams or {};
     creationParams.foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000};
     creationParams.backgroundColor = creationParams.backgroundColor or {0.498, 0.000, 0.000, 1.000};
-    creationParams.invertColors = creationParams.invertColors or false;
-    creationParams.leftToRight = creationParams.leftToRight or false;
-    creationParams.flipBar = creationParams.flipBar or false;
-    creationParams.isShort = creationParams.isShort or false;
     creationParams.barTexture = creationParams.barTexture or "hp-bar";
     creationParams.borderTexture = creationParams.borderTexture or "hp-bar-border";
     creationParams.barHeight = creationParams.barHeight or 32;
     
     local object = {
-        leftToRightGrowth = creationParams.leftToRight or false,
-        isShort = creationParams.isShort or false,
+        leftToRightGrowth = creationParams.leftToRight,
+        isShort = creationParams.isShort,
     };
     
     setmetatable(object, self);
