@@ -80,7 +80,7 @@ function AngledBar:new(name, creationParams)
     creationParams.foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000};
     creationParams.backgroundColor = creationParams.backgroundColor or {0.498, 0.000, 0.000, 1.000};
     creationParams.invertColors = creationParams.invertColors or false;
-    creationParams.leftToRightGrowth = creationParams.leftToRightGrowth or false;
+    creationParams.leftToRightGrowth = creationParams.leftToRight or false;
     creationParams.flipBar = creationParams.flipBar or false;
     creationParams.isShort = creationParams.isShort or false;
     creationParams.barTexture = creationParams.barTexture or "hp-bar";
