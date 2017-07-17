@@ -24,7 +24,7 @@ local function AngledBar_Create(self, name, creationParams)
         return t;
     end
     
-    local barHeight = 32;
+    local barHeight = creationParams.barHeight;
     
     local f = CreateFrame("Frame", name, UIParent);
     f:SetFrameStrata("BACKGROUND");
@@ -35,8 +35,8 @@ local function AngledBar_Create(self, name, creationParams)
     f:SetScript("OnDragStop", f.StopMovingOrSizing);
     self.frame = f;
     
-    local barTexture = "hp-bar";
-    local overlayTexture = "hp-bar-border";
+    local barTexture = creationParams.barTexture;
+    local overlayTexture = creationParams.borderTexture;
     
     if creationParams.isShort then
         barTexture = barTexture.."-short";
@@ -72,6 +72,9 @@ end
 -- creationParams.leftToRight: The bar grows from left to right. Defaults to false
 -- creationParams.flipBar: Flips the bar horizontally. Defaults to false
 -- creationParams.isShort: Uses the shorter bar texture if set. Defaults to false
+-- creationParams.barTexture: The texture used for the bar. Defaults to "hp-bar"
+-- creationParams.borderTexture: The texture used for the border. Defaults to "hp-bar-border"
+-- creationParams.barHeight: The height of the bar. Defaults to 32
 function AngledBar:new(name, creationParams)
     local creationParams = creationParams or {};
     creationParams.foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000};
@@ -80,6 +83,9 @@ function AngledBar:new(name, creationParams)
     creationParams.leftToRightGrowth = creationParams.leftToRightGrowth or false;
     creationParams.flipBar = creationParams.flipBar or false;
     creationParams.isShort = creationParams.isShort or false;
+    creationParams.barTexture = creationParams.barTexture or "hp-bar";
+    creationParams.borderTexture = creationParams.borderTexture or "hp-bar-border";
+    creationParams.barHeight = creationParams.barHeight or 32;
     
     local object = {
         leftToRightGrowth = creationParams.leftToRight or false,
