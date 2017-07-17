@@ -10,16 +10,16 @@ local smallBarWidth = 438;
 
 -- Creates an AngledBar and writes it to self.frame
 -- name: The name of the AngledBar. Must be set if the user can place this frame
-local function AngledBar_Create(self, name)
+local function AngledBar_Create(self, name, creationParams)
     local makeTex = function(layer, width, height, texture)
         local t = self.frame:CreateTexture(nil, layer);
         t:SetHeight(height);
         t:SetWidth(width);
         t:SetTexture("Interface\\Addons\\chronoUI\\img\\"..texture);
-        if self.invertColors or self.leftToRightGrowth then
-            t:SetVertexColor(unpack(self.foregroundColor));
+        if creationParams.invertColors or creationParams.leftToRightGrowth then
+            t:SetVertexColor(unpack(creationParams.foregroundColor));
         else
-            t:SetVertexColor(unpack(self.backgroundColor));
+            t:SetVertexColor(unpack(creationParams.backgroundColor));
         end
         return t;
     end
@@ -38,12 +38,12 @@ local function AngledBar_Create(self, name)
     local barTexture = "hp-bar";
     local overlayTexture = "hp-bar-border";
     
-    if self.isShort then
+    if creationParams.isShort then
         barTexture = barTexture.."-short";
         overlayTexture = overlayTexture.."-short";
     end
     
-    if self.flipBar then
+    if creationParams.flipBar then
         barTexture = barTexture.."-flipped";
         overlayTexture = overlayTexture.."-flipped";
     end
@@ -57,10 +57,10 @@ local function AngledBar_Create(self, name)
     
     f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
     f.bar:SetPoint("RIGHT", f.background);
-    if self.invertColors or self.leftToRightGrowth then
-        f.bar:SetVertexColor(unpack(self.backgroundColor));
+    if creationParams.invertColors or creationParams.leftToRightGrowth then
+        f.bar:SetVertexColor(unpack(creationParams.backgroundColor));
     else
-        f.bar:SetVertexColor(unpack(self.foregroundColor));
+        f.bar:SetVertexColor(unpack(creationParams.foregroundColor));
     end
 end
 
@@ -74,19 +74,22 @@ end
 -- creationParams.isShort: Uses the shorter bar texture if set. Defaults to false
 function AngledBar:new(name, creationParams)
     local creationParams = creationParams or {};
+    creationParams.foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000};
+    creationParams.backgroundColor = creationParams.backgroundColor or {0.498, 0.000, 0.000, 1.000};
+    creationParams.invertColors = creationParams.invertColors or false;
+    creationParams.leftToRightGrowth = creationParams.leftToRightGrowth or false;
+    creationParams.flipBar = creationParams.flipBar or false;
+    creationParams.isShort = creationParams.isShort or false;
+    
     local object = {
-        foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000},
-        backgroundColor = creationParams.backgroundColor or {0.498, 0.000, 0.000, 1.000},
-        invertColors = creationParams.invertColors or false,
-        leftToRightGrowth = creationParams.leftToRightGrowth or false,
-        flipBar = creationParams.flipBar or false,
+        leftToRightGrowth = creationParams.leftToRight or false,
         isShort = creationParams.isShort or false,
     };
     
     setmetatable(object, self);
     self.__index = self;
     
-    AngledBar_Create(object, name, isShort);
+    AngledBar_Create(object, name, creationParams);
     
     return object;
 end
