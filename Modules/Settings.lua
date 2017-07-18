@@ -130,13 +130,13 @@ function Module:CreateFrame()
                 do
                     local t = content.view:AddTab("General");
                     local db = self.db[self.db.current].PlayerFrame;
+                    local module = chronoUI:GetModule("PlayerFrame");
                     
                     local label = Gui.makeFontString(t.content, self.myDb.font, 10);
                     label:SetPoint("TOPLEFT", t.content, "TOPLEFT", 4, -16);
                     label:SetText("Enabled:");
                     
                     local btn = Gui.makeCheckButton(32, 32, t.content, db.enabled, function(btn)
-                        local module = chronoUI:GetModule("PlayerFrame");
                         module:UpdateSetting("enabled", btn:GetChecked());
                     end);
                     
@@ -147,10 +147,14 @@ function Module:CreateFrame()
                     label2:SetText("Disable Blizzard's Cast Bar:");
                     
                     btn = Gui.makeCheckButton(32, 32, t.content, db.disableBlizzardCastBar, function(btn)
-                        local module = chronoUI:GetModule("PlayerFrame");
                         module:UpdateSetting("disableBlizzardCastBar", btn:GetChecked());
                     end);
                     btn:SetPoint("LEFT", label2, "RIGHT");
+                    
+                    local slider = Gui.makeSlider("Scale:", 200, t.content, 0.1, 2, 0.1, db.scale, function(slider)
+                        module:UpdateSetting("scale", slider:GetValue());
+                    end);
+                    slider:SetPoint("TOPLEFT", label2, "BOTTOMLEFT", 0, -26);
                 end
                 -- "Hp Bar" tab
                 do
