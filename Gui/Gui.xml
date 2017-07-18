@@ -3,5 +3,6 @@
     <Script file="AngledBar.lua"/>
     <Script file="CastBar.lua"/>
     <Script file="Helper.lua"/>
+    <Script file="TabFrame.lua"/>
     <Script file="UnitFrame.lua"/>
 </Ui>
