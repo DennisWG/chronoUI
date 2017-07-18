@@ -103,6 +103,12 @@ function Core:NormalizeFromRGBA(r, g, b, a)
     return { r = r / 255, g = g / 255, b = b / 255, a = a / 255 };
 end
 
+function Core:EnsureType(variable,  typeName)
+    if not type(variable) == typeName then
+        error(string.format("Type Mismatch!\nRequired %s got %s\n%s", typeName, type(variable), debugstack()));
+    end
+end
+
     local resolution = GetCVar("gxResolution")
     for screenwidth, screenheight in gfind(resolution, "(.+)x(.+)") do
       local scale = (min(2, max(.64, 768/screenheight)))
