@@ -81,7 +81,7 @@ function Module:OnUpdate(timeDelta)
 end
 
 function Module:InitializeDefaultProfile()
-    self.myDb = --[[self.db[self.db.current]["PlayerFrame"] or]] {
+    self.myDb = self.db[self.db.current]["PlayerFrame"] or {
         enabled = true,
         disableBlizzardCastBar = true,
         scale = 0.6,
@@ -151,6 +151,13 @@ function Module:UpdateSetting(name, newValue)
             self:EnableBlizzardCastBar();
         end
     --name == "disableBlizzardCastBar"
+    elseif name == "scale" then
+        chronoUI:EnsureType(newValue, "number");
+        self.myDb.scale = newValue;
+        -- TODO: Actually delete the old frame
+        self.unitFrame.frame:Hide();
+        return self:CreateFrame();
+    --name == "scale"
     end
     
     self.myDb[name] = newValue;
