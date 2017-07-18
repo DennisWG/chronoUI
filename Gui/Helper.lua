@@ -45,3 +45,39 @@ function Gui.makeFrame(frameType, width, height, name, parent, inherits)
     return f;
 end
 
+-- Creates a CheckButton from the given parameters
+-- width: The width of the CheckButton
+-- height: The height of the CheckButton
+-- parent: The CheckButton's parent frame
+-- state: The state the button should occupy after creation
+-- callback: Will be called when the CheckButton is clicked. Takes the CheckButton as a parameter
+-- normalTexture: The texture of the CheckButton when it is disabled. Defaults to "Settings\\checkbutton"
+-- checkedTexture: The texture of the CheckButton when it is checked. Defaults to "Settings\\checkbutton-checked"
+function Gui.makeCheckButton(width, height, parent, state, callback, normalTexture, checkedTexture)
+    local f = Gui.makeFrame("CheckButton", width, height, nil, parent);
+    
+    f.normalTexture = chronoUI.imageFolder..(normalTexture or "Settings\\checkbutton");
+    f.checkedTexture = chronoUI.imageFolder..(checkedTexture or "Settings\\checkbutton-checked");
+    
+    if state then
+        f:SetNormalTexture(f.checkedTexture);
+    else
+        f:SetNormalTexture(f.normalTexture);
+    end
+    
+    -- TODO: Doesn't work without. Investigate
+    f:SetScript("OnShow", function() this:SetChecked(state); end);
+    
+    f:SetScript("OnClick", function()
+        if this:GetChecked() then
+            this:SetNormalTexture(this.checkedTexture);
+        else
+            this:SetNormalTexture(this.normalTexture);
+        end
+        if callback then
+            callback(this);
+        end
+    end);
+    
+    return f;
+end
