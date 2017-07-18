@@ -81,3 +81,52 @@ function Gui.makeCheckButton(width, height, parent, state, callback, normalTextu
     
     return f;
 end
+
+-- Creates a Slider from the given parameters
+-- name: The text the Slider will be labeled with. (Not the global name)
+-- width: The width of the Slider
+-- parent: The Slider's parent frame
+-- min: The smallest possible value
+-- max: The biggest possible value
+-- initial: The value the Slider starts with
+-- callback: Gets called when the Slider's value changes. Takes the slider as a parameter
+function Gui.makeSlider(name, width, parent, min, max, step, initial, callback)
+    local f = Gui.makeFrame("Slider", width, 8, nil, parent);
+    f:SetOrientation("HORIZONTAL");
+    f:SetThumbTexture(chronoUI.imageFolder.."slider-thumb");
+    f:SetMinMaxValues(min, max);
+    f:SetValueStep(step);
+    f:SetValue(initial);
+    f:SetBackdrop( { 
+        bgFile = chronoUI.imageFolder.."bg-modern",
+        edgeFile = chronoUI.imageFolder.."border-narrow",
+        
+        tile = true, tileSize = 256, edgeSize = 4,
+    });
+    f:SetBackdropBorderColor(0, 0, 0, 1);
+    
+    f.name = Gui.makeFontString(f, chronoUI.fontFolder.."DroidSansMono.ttf", 10);
+    f.name:SetPoint("BOTTOMLEFT", f, "TOPLEFT", 0, 8);
+    f.name:SetText(name);
+    
+    f.min = Gui.makeFontString(f, chronoUI.fontFolder.."DroidSansMono.ttf", 8);
+    f.min:SetPoint("TOPLEFT", f, "BOTTOMLEFT", 0, 0);
+    f.min:SetText(min);
+    
+    f.max = Gui.makeFontString(f, chronoUI.fontFolder.."DroidSansMono.ttf", 8);
+    f.max:SetPoint("TOPRIGHT", f, "BOTTOMRIGHT", 0, 0);
+    f.max:SetText(max);
+    
+    f.current = Gui.makeFontString(f, chronoUI.fontFolder.."DroidSansMono.ttf", 8);
+    f.current:SetPoint("TOP", f, "BOTTOM", 0, 0);
+    f.current:SetText(chronoUI:Round(initial, 1));
+    
+    f:SetScript("OnValueChanged", function()
+        this.current:SetText(chronoUI:Round(this:GetValue(), 1));
+        if callback then
+            callback(this);
+        end
+    end);
+    
+    return f;
+end
