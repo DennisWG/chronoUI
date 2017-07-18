@@ -10,6 +10,7 @@ chronoUI.lua
 Gui\AngledBar.lua
 Gui\UnitFrame.lua
 Gui\CastBar.lua
+Gui\TabFrame.lua
 
 # Modules
 Modules\Modules.xml
