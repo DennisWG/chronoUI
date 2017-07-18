@@ -159,6 +159,62 @@ function Module:CreateFrame()
                 -- "Hp Bar" tab
                 do
                     local t = content.view:AddTab("Hp Bar");
+                    local db = self.db[self.db.current].PlayerFrame.hpBar;
+                    local module = chronoUI:GetModule("PlayerFrame");
+                    
+                    local label = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label:SetPoint("TOPLEFT", t.content, "TOPLEFT", 4, -16);
+                    label:SetText("Enabled:");
+                    
+                    local btn = Gui.makeCheckButton(32, 32, t.content, db.enabled, function(btn)
+                        module:UpdateSetting("hpBar.enabled", btn:GetChecked());
+                    end);
+                    btn:SetPoint("LEFT", label, "RIGHT");
+                    
+                    local label2 = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label2:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -8);
+                    label2:SetText("Left to right:");
+                    
+                    btn = Gui.makeCheckButton(32, 32, t.content, db.leftToRight, function(btn)
+                        module:UpdateSetting("hpBar.leftToRight", btn:GetChecked());
+                    end);
+                    btn:SetPoint("LEFT", label2, "RIGHT");
+                    
+                    label = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label:SetPoint("TOPLEFT", label2, "BOTTOMLEFT", 0, -8);
+                    label:SetText("Invert Colors:");
+                    
+                    btn = Gui.makeCheckButton(32, 32, t.content, db.invertColors, function(btn)
+                        module:UpdateSetting("hpBar.invertColors", btn:GetChecked());
+                    end);
+                    btn:SetPoint("LEFT", label, "RIGHT");
+                    
+                    label2 = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label2:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -8);
+                    label2:SetText("Mirror Bar Texture:");
+                    
+                    btn = Gui.makeCheckButton(32, 32, t.content, db.flipBar, function(btn)
+                        module:UpdateSetting("hpBar.flipBar", btn:GetChecked());
+                    end);
+                    btn:SetPoint("LEFT", label2, "RIGHT");
+                    
+                    label = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label:SetPoint("TOPLEFT", label2, "BOTTOMLEFT", 0, -8);
+                    label:SetText("Short Bar:");
+                    
+                    btn = Gui.makeCheckButton(32, 32, t.content, db.isShort, function(btn)
+                        module:UpdateSetting("hpBar.isShort", btn:GetChecked());
+                    end);
+                    btn:SetPoint("LEFT", label, "RIGHT");
+                    
+                    label2 = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label2:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -8);
+                    label2:SetText("Mirror Bar Texture:");
+                    
+                    btn = Gui.makeCheckButton(32, 32, t.content, db.foregroundColor, function(btn)
+                        module:UpdateSetting("hpBar.foregroundColor", btn:GetChecked());
+                    end);
+                    btn:SetPoint("LEFT", label2, "RIGHT");
                 end
                 -- "Power Bar" tab
                 do
@@ -169,7 +225,7 @@ function Module:CreateFrame()
                     local t = content.view:AddTab("Cast Bar");
                 end
                 
-                content.view:SelectTab("General");
+                content.view:SelectTab("Hp Bar");
             end
             
             self.tabView:SelectTab("Player");

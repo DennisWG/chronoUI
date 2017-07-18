@@ -1,6 +1,9 @@
 local Module = chronoUI:RegisterModule("PlayerFrame");
 if not Module then return; end
 
+local gfind = string.gmatch;
+local sfind = string.find;
+
 Module:RegisterEvent("ADDON_LOADED");
 
 function Module:ADDON_LOADED(name)
@@ -56,10 +59,13 @@ function Module:OnUpdate(timeDelta)
     local healthPct = 100 / UnitHealthMax("player") * UnitHealth("player");
     local powerPct = 100 / UnitManaMax("player") * UnitMana("player");
     
-    self.unitFrame.frame.hpBar:SetBarPercentage(healthPct);
+    if self.myDb.hpBar.enabled then
+        self.unitFrame.frame.hpBar:SetBarPercentage(healthPct);
+        self.unitFrame.frame.hp:SetText(UnitHealth("player").." / "..UnitHealthMax("player").." ("..chronoUI.Round(healthPct,1).."%)");
+    end
+    
     self.unitFrame.frame.powerBar:SetBarPercentage(powerPct);
     
-    self.unitFrame.frame.hp:SetText(UnitHealth("player").." / "..UnitHealthMax("player").." ("..chronoUI.Round(healthPct,1).."%)");
     self.unitFrame.frame.power:SetText(UnitMana("player").." / "..UnitManaMax("player").." ("..chronoUI.Round(powerPct,1).."%)");
     
     self.total = self.total or 0;
@@ -126,8 +132,16 @@ function Module:InitializeDefaultProfile()
 end
 
 function Module:UpdateSetting(name, newValue)
-    if name == "enabled" then
+    local reload;
+    local subName = "";
+    
+    if sfind(name, "%.") then
+        subName, name = gfind(name, "(.*%.)(.*)")();
+    end
+    
+    if name == "enabled" and subName == "" then
         chronoUI.EnsureType(newValue, "boolean");
+        newValue = not not newValue;
         
         if newValue then
             self:SetScript("OnUpdate", self.OnUpdate);
@@ -144,6 +158,7 @@ function Module:UpdateSetting(name, newValue)
     -- name == "enabled"
     elseif name == "disableBlizzardCastBar" then
         chronoUI.EnsureType(newValue, "boolean");
+        newValue = not not newValue;
         
         if newValue then
             self:DisableBlizzardCastBar();
@@ -153,14 +168,65 @@ function Module:UpdateSetting(name, newValue)
     --name == "disableBlizzardCastBar"
     elseif name == "scale" then
         chronoUI.EnsureType(newValue, "number");
-        self.myDb.scale = newValue;
-        -- TODO: Actually delete the old frame
-        self.unitFrame.frame:Hide();
-        return self:CreateFrame();
+        reload = true;
     --name == "scale"
+    elseif name == "enabled" then
+        chronoUI.EnsureType(newValue, "boolean");
+        newValue = not not newValue;
+        reload = true;
+    --name == "enabled"
+    elseif name == "leftToRight" then
+        chronoUI.EnsureType(newValue, "boolean");
+        newValue = not not newValue;
+        reload = true;
+    --name == "leftToRight"
+    elseif name == "invertColors" then
+        chronoUI.EnsureType(newValue, "boolean");
+        newValue = not not newValue;
+        reload = true;
+    --name == "invertColors"
+    elseif name == "flipBar" then
+        chronoUI.EnsureType(newValue, "boolean");
+        newValue = not not newValue;
+        reload = true;
+    --name == "flipBar"
+    elseif name == "isShort" then
+        chronoUI.EnsureType(newValue, "boolean");
+        newValue = not not newValue;
+        reload = true;
+    --name == "isShort"
+    elseif name == "foregroundColor" then
+        chronoUI.EnsureType(newValue, "table");
+        newValue = not not newValue;
+        reload = true;
+    --name == "foregroundColor"
+    elseif name == "backgroundColor" then
+        chronoUI.EnsureType(newValue, "table");
+        newValue = not not newValue;
+        reload = true;
+    --name == "backgroundColor"
+    elseif name == "font" then
+        chronoUI.EnsureType(newValue, "string");
+        newValue = not not newValue;
+        reload = true;
+    --name == "font"
+    elseif name == "fontSize" then
+        chronoUI.EnsureType(newValue, "number");
+        newValue = not not newValue;
+        reload = true;
+    --name == "fontSize"
+    elseif name == "fontColor" then
+        chronoUI.EnsureType(newValue, "table");
+        newValue = not not newValue;
+        reload = true;
+    --name == "fontColor"
     end
     
-    self.myDb[name] = newValue;
+    RunScript("chronoUI.Modules.PlayerFrame.myDb."..subName..name.."="..tostring(newValue));
+    if reload then
+        self.unitFrame.frame:Hide();
+        return self:CreateFrame();
+    end
 end
 
 function Module:DisableBlizzardCastBar()

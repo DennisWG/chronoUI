@@ -17,6 +17,7 @@ local function UniFrame_Create(self, name, creationParams)
     
     local f = Gui.makeFrame("Button", frameWidth, frameHeight, name, UIParent, "SecureUnitButtonTemplate");
     
+    chronoUI:Print(creationParams.hpBar.invertColors)
     -- Initialize f
     do
         f:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", add);
@@ -50,45 +51,56 @@ local function UniFrame_Create(self, name, creationParams)
         f.hpBar = hpBar;
     end
 
+    local inset = 0;
+    if creationParams.powerBar.isShort and not creationParams.hpBar.isShort then
+        inset = -14;
+    end
+    
     local powerBar = chronoUI.Gui.AngledBar:new(nil, creationParams.powerBar);
+    powerBar.frame:SetPoint("TOP", hpBar.frame, "BOTTOM", inset, 0);
+    powerBar.frame:SetParent(f);
     -- Initialize powerBar
-    do
-        powerBar.frame:SetParent(f);
-        
-        local inset = 0;
-        if creationParams.powerBar.isShort then inset = -14; end
-        
+    if creationParams.powerBar.enabled then
         f.power = Gui.makeFontString(
             powerBar.frame,
             creationParams.powerBar.font,
             creationParams.powerBar.fontSize,
             creationParams.powerBar.fontColor
         );
-        powerBar.frame:SetPoint("TOP", hpBar.frame, "BOTTOM", inset, 0);
         powerBar:SetBarPercentage(75);
         f.powerBar = powerBar;
     end
 
     -- Initialize FontStrings
     do
-        local params = {
-            powerBar.frame,
-            creationParams.hpBar.font,
-            creationParams.hpBar.fontSize,
-            creationParams.hpBar.fontColor
-        };
-        f.name = Gui.makeFontString(unpack(params));
-        f.name:SetPoint("RIGHT", hpBar.frame, "RIGHT", 0, 32);
-        f.name:SetText(UnitName("player"));
+        if creationParams.hpBar.enabled then
+            local params = {
+                powerBar.frame,
+                creationParams.hpBar.font,
+                creationParams.hpBar.fontSize,
+                creationParams.hpBar.fontColor
+            };
+            f.name = Gui.makeFontString(unpack(params));
+            f.name:SetPoint("RIGHT", hpBar.frame, "RIGHT", 0, 32);
+            f.name:SetText(UnitName("player"));
+            
+            f.level = Gui.makeFontString(unpack(params));
+            f.level:SetPoint("RIGHT", f.name, "LEFT", 0, 0);
+            f.level:SetText(UnitLevel("player").." - ");
+            
+            f.hp = Gui.makeFontString(unpack(params));
+            if creationParams.hpBar.isShort then
+                f.hp:SetPoint("LEFT", hpBar.frame, "LEFT", 120, 0);
+            else
+                f.hp:SetPoint("LEFT", hpBar.frame, "LEFT", 50, 0);
+            end
+        end
         
-        f.level = Gui.makeFontString(unpack(params));
-        f.level:SetPoint("RIGHT", f.name, "LEFT", 0, 0);
-        f.level:SetText(UnitLevel("player").." - ");
-        
-        f.hp = Gui.makeFontString(unpack(params));
-        f.hp:SetPoint("LEFT", hpBar.frame, "LEFT", 50, 0);
-        
-        f.power:SetPoint("LEFT", powerBar.frame, "LEFT", 120, 0);
+        if creationParams.powerBar.isShort then
+            f.power:SetPoint("LEFT", powerBar.frame, "LEFT", 120, 0);
+        else
+            f.power:SetPoint("LEFT", powerBar.frame, "LEFT", 50, 0);
+        end
     end
     
     local castBar = chronoUI.Gui.CastBar:new(name.."CastBar", creationParams.castBar);

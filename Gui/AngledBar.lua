@@ -11,10 +11,11 @@ local smallBarWidth = 438;
 -- Creates an AngledBar and writes it to self.frame
 -- name: The name of the AngledBar. Must be set if the user can place this frame
 local function AngledBar_Create(self, name, creationParams)
+    local foregroundColor = creationParams.foregroundColor;
+    local backgroundColor = creationParams.backgroundColor;
     if creationParams.invertColors then
-        local tmp = creationParams.foregroundColor;
-        creationParams.foregroundColor = creationParams.backgroundColor;
-        creationParams.backgroundColor = tmp;
+        foregroundColor = creationParams.backgroundColor;
+        backgroundColor = creationParams.foregroundColor;
     end
     
     local barHeight = creationParams.barHeight;
@@ -41,16 +42,16 @@ local function AngledBar_Create(self, name, creationParams)
     end
 
     
-    f.background = Gui.makeTexture(self.frame, "BACKGROUND", barWidth, barHeight, barTexture, creationParams.backgroundColor);
+    f.background = Gui.makeTexture(self.frame, "BACKGROUND", barWidth, barHeight, barTexture, backgroundColor);
     f.background:SetPoint("CENTER", f);
     
-    f.overlay = Gui.makeTexture(self.frame, "OVERLAY", barWidth, barHeight, overlayTexture, creationParams.backgroundColor);
+    f.overlay = Gui.makeTexture(self.frame, "OVERLAY", barWidth, barHeight, overlayTexture, backgroundColor);
     f.overlay:SetPoint("RIGHT", f);
     f.overlay:SetVertexColor(0, 0, 0, 1);
     
-    f.bar = Gui.makeTexture(self.frame, "BORDER", barWidth, barHeight, barTexture, creationParams.backgroundColor);
+    f.bar = Gui.makeTexture(self.frame, "BORDER", barWidth, barHeight, barTexture, backgroundColor);
     f.bar:SetPoint("RIGHT", f.background);
-    f.bar:SetVertexColor(unpack(creationParams.foregroundColor));
+    f.bar:SetVertexColor(unpack(foregroundColor));
 end
 
 -- Creates and returns a new AngledBar
@@ -64,6 +65,7 @@ end
 -- creationParams.barTexture: The texture used for the bar. Defaults to "hp-bar"
 -- creationParams.borderTexture: The texture used for the border. Defaults to "hp-bar-border"
 -- creationParams.barHeight: The height of the bar. Defaults to 32
+-- creationParams.enabled: Should this frame be shown? Defaults to true
 function AngledBar:new(name, creationParams)
     local creationParams = creationParams or {};
     creationParams.foregroundColor = creationParams.foregroundColor or {0.129, 0.129, 0.129, 1.000};
@@ -81,6 +83,10 @@ function AngledBar:new(name, creationParams)
     self.__index = self;
     
     AngledBar_Create(object, name, creationParams);
+    
+    if creationParams.enabled == false then
+        object.frame:Hide();
+    end
     
     return object;
 end
