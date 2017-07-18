@@ -59,8 +59,8 @@ function Module:OnUpdate(timeDelta)
     self.unitFrame.frame.hpBar:SetBarPercentage(healthPct);
     self.unitFrame.frame.powerBar:SetBarPercentage(powerPct);
     
-    self.unitFrame.frame.hp:SetText(UnitHealth("player").." / "..UnitHealthMax("player").." ("..chronoUI:Round(healthPct,1).."%)");
-    self.unitFrame.frame.power:SetText(UnitMana("player").." / "..UnitManaMax("player").." ("..chronoUI:Round(powerPct,1).."%)");
+    self.unitFrame.frame.hp:SetText(UnitHealth("player").." / "..UnitHealthMax("player").." ("..chronoUI.Round(healthPct,1).."%)");
+    self.unitFrame.frame.power:SetText(UnitMana("player").." / "..UnitManaMax("player").." ("..chronoUI.Round(powerPct,1).."%)");
     
     self.total = self.total or 0;
     self.total = self.total + timeDelta * 10;
@@ -127,7 +127,7 @@ end
 
 function Module:UpdateSetting(name, newValue)
     if name == "enabled" then
-        chronoUI:EnsureType(newValue, "boolean");
+        chronoUI.EnsureType(newValue, "boolean");
         
         if newValue then
             self:SetScript("OnUpdate", self.OnUpdate);
@@ -143,7 +143,7 @@ function Module:UpdateSetting(name, newValue)
         end
     -- name == "enabled"
     elseif name == "disableBlizzardCastBar" then
-        chronoUI:EnsureType(newValue, "boolean");
+        chronoUI.EnsureType(newValue, "boolean");
         
         if newValue then
             self:DisableBlizzardCastBar();
@@ -152,7 +152,7 @@ function Module:UpdateSetting(name, newValue)
         end
     --name == "disableBlizzardCastBar"
     elseif name == "scale" then
-        chronoUI:EnsureType(newValue, "number");
+        chronoUI.EnsureType(newValue, "number");
         self.myDb.scale = newValue;
         -- TODO: Actually delete the old frame
         self.unitFrame.frame:Hide();

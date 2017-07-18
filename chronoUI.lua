@@ -93,20 +93,46 @@ function Core:GetModule(name)
     return self.Modules[name];
 end
 
-function Core:Round(num, numDecimalPlaces)
+function Core.Round(num, numDecimalPlaces)
     local mult = 10^(numDecimalPlaces or 0);
     return math.floor(num * mult + 0.5) / mult;
 end
 
 -- Normalizes the given rgba color to a range of 0 - 1
-function Core:NormalizeFromRGBA(r, g, b, a)
+function Core.NormalizeFromRGBA(r, g, b, a)
     return { r = r / 255, g = g / 255, b = b / 255, a = a / 255 };
 end
 
-function Core:EnsureType(variable,  typeName)
+function Core.EnsureType(variable,  typeName)
     if not type(variable) == typeName then
         error(string.format("Type Mismatch!\nRequired %s got %s\n%s", typeName, type(variable), debugstack()));
     end
+end
+
+-- Splits the given string into a list of sub-strings
+-- str: The string to split
+-- seperatorPattern: The seperator between sub-string. May contain patterns
+-- returns: A list of sub-strings
+function Core.splitString(str, seperatorPattern)
+    local tbl = {};
+    local pattern = "(.-)" .. seperatorPattern;
+    local lastEnd = 1;
+    local s, e, cap = string.find(str, pattern, 1);
+   
+    while s do
+        if s ~= 1 or cap ~= "" then
+            table.insert(tbl,cap);
+        end
+        lastEnd = e + 1;
+        s, e, cap = string.find(str, pattern, lastEnd);
+    end
+    
+    if lastEnd <= string.len(str) then
+        cap = string.sub(str, lastEnd);
+        table.insert(tbl, cap);
+    end
+    
+    return tbl
 end
 
     local resolution = GetCVar("gxResolution")

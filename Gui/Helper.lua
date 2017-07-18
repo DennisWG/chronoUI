@@ -119,10 +119,10 @@ function Gui.makeSlider(name, width, parent, min, max, step, initial, callback)
     
     f.current = Gui.makeFontString(f, chronoUI.fontFolder.."DroidSansMono.ttf", 8);
     f.current:SetPoint("TOP", f, "BOTTOM", 0, 0);
-    f.current:SetText(chronoUI:Round(initial, 1));
+    f.current:SetText(chronoUI.Round(initial, 1));
     
     f:SetScript("OnValueChanged", function()
-        this.current:SetText(chronoUI:Round(this:GetValue(), 1));
+        this.current:SetText(chronoUI.Round(this:GetValue(), 1));
         if callback then
             callback(this);
         end
