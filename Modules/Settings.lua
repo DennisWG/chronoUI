@@ -1,6 +1,8 @@
 local Module = chronoUI:RegisterModule("Settings");
 if not Module then return; end
 
+local Gui = chronoUI.Gui;
+
 Module:RegisterEvent("ADDON_LOADED");
 
 local windowWidth = 600;
