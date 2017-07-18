@@ -29,6 +29,7 @@ local function AngledBar_Create(self, name, creationParams)
     local barHeight = creationParams.barHeight;
     
     local f = CreateFrame("Frame", name, UIParent);
+    f:SetMovable(true);
     f:SetFrameStrata("BACKGROUND");
     f:SetHeight(barHeight + 10);
     f:SetWidth(barWidth);
@@ -119,8 +120,6 @@ function AngledBar:ToggleDrag()
     if self.dragging then
         self.dragging = false;
         self.frame:SetBackdrop(nil);
-        
-        self.frame:SetMovable(false);
         self.frame:EnableMouse(false);
     else
         self.dragging = true;
@@ -132,8 +131,6 @@ function AngledBar:ToggleDrag()
         });
         
         self.frame:SetBackdropColor(0,0,0,1);
-        
-        self.frame:SetMovable(true);
         self.frame:EnableMouse(true);
     end
 end
