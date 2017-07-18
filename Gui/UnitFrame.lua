@@ -29,8 +29,8 @@ local function UniFrame_Create(self, name, creationParams)
         --f:SetScript("OnDragStop", f.StopMovingOrSizing);
 
         f:RegisterForClicks('LeftButtonUp', 'RightButtonUp');
-        f:SetAttribute("*type1", "target")
-        f:SetAttribute("*type2", "menu")
+        f:SetAttribute("*type1", "target");
+        f:SetAttribute("*type2", "menu");
         f:SetScript("OnEnter",ShowTooltip);
         f:SetScript("OnLeave",HideTooltip);
         
