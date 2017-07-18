@@ -82,7 +82,7 @@ function Module:CreateFrame()
         self.frame.close:SetPoint("TOPRIGHT", self.frame, -4, -4);
         self.frame.close:SetScript("OnClick", function() self.frame:Hide(); end);
         
-        self.frame.title = Gui.makeFontString(self.frame, chronoUI.fontFolder.."DroidSansMono.ttf", 32);
+        self.frame.title = Gui.makeFontString(self.frame, self.myDb.font, 32);
         self.frame.title:SetPoint("TOP", self.frame, "TOP", 0, -5);
         self.frame.title:SetText("chronoUI Settings");
                 
@@ -126,10 +126,44 @@ function Module:CreateFrame()
                 };
                 content.view = chronoUI.Gui.TabFrame:new(nil, params);
                 content.view.frame:SetPoint("TOPLEFT", content);
-                local t = content.view:AddTab("General");
-                local t = content.view:AddTab("Hp Bar");
-                local t = content.view:AddTab("Power Bar");
-                local t = content.view:AddTab("Cast Bar");
+                -- "General" tab
+                do
+                    local t = content.view:AddTab("General");
+                    local db = self.db[self.db.current].PlayerFrame;
+                    
+                    local label = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label:SetPoint("TOPLEFT", t.content, "TOPLEFT", 4, -16);
+                    label:SetText("Enabled:");
+                    
+                    local btn = Gui.makeCheckButton(32, 32, t.content, db.enabled, function(btn)
+                        local module = chronoUI:GetModule("PlayerFrame");
+                        module:UpdateSetting("enabled", btn:GetChecked());
+                    end);
+                    
+                    btn:SetPoint("LEFT", label, "RIGHT");
+                    
+                    local label2 = Gui.makeFontString(t.content, self.myDb.font, 10);
+                    label2:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -8);
+                    label2:SetText("Disable Blizzard's Cast Bar:");
+                    
+                    btn = Gui.makeCheckButton(32, 32, t.content, db.disableBlizzardCastBar, function(btn)
+                        local module = chronoUI:GetModule("PlayerFrame");
+                        module:UpdateSetting("disableBlizzardCastBar", btn:GetChecked());
+                    end);
+                    btn:SetPoint("LEFT", label2, "RIGHT");
+                end
+                -- "Hp Bar" tab
+                do
+                    local t = content.view:AddTab("Hp Bar");
+                end
+                -- "Power Bar" tab
+                do
+                    local t = content.view:AddTab("Power Bar");
+                end
+                -- "Cast Bar" tab
+                do
+                    local t = content.view:AddTab("Cast Bar");
+                end
                 
                 content.view:SelectTab("General");
             end
@@ -142,6 +176,7 @@ end
 function Module:InitializeDefaultProfile()
     self.myDb = --[[self.db[self.db.current]["Settings"] or]] {
         enabled = true,
+        font = chronoUI.fontFolder.."DroidSansMono.ttf",
     };
     
     return self.myDb;

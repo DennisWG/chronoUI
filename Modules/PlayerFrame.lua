@@ -11,6 +11,10 @@ function Module:ADDON_LOADED(name)
     if self.myDb.enabled then
         self:CreateFrame();
         self:SetScript("OnUpdate", self.OnUpdate);
+        
+        if self.myDb.disableBlizzardCastBar then
+            self:DisableBlizzardCastBar();
+        end
     end
 end
 
@@ -68,8 +72,6 @@ function Module:OnUpdate(timeDelta)
     --self.unitFrame.frame.castBar.bar:SetBarPercentage(self.total);
     --self.unitFrame.frame.castBar.bar.frame:Show();
     
-    CastingBarFrame.Show = function() chronoUI:Print("show"); end
-    
     if(self.total >= 100) then
         self.total = 0;
     end
@@ -81,6 +83,7 @@ end
 function Module:InitializeDefaultProfile()
     self.myDb = --[[self.db[self.db.current]["PlayerFrame"] or]] {
         enabled = true,
+        disableBlizzardCastBar = true,
         scale = 0.6,
         hpBar = {
             enabled = true,
@@ -120,4 +123,46 @@ function Module:InitializeDefaultProfile()
     };
     
     return self.myDb;
+end
+
+function Module:UpdateSetting(name, newValue)
+    if name == "enabled" then
+        chronoUI:EnsureType(newValue, "boolean");
+        
+        if newValue then
+            self:SetScript("OnUpdate", self.OnUpdate);
+            self.unitFrame.frame:Show();
+            
+            if self.myDb.disableBlizzardCastBar then
+                self:DisableBlizzardCastBar();
+            end
+        else
+            self:SetScript("OnUpdate", nil);
+            self.unitFrame.frame:Hide();
+            self:EnableBlizzardCastBar();
+        end
+    -- name == "enabled"
+    elseif name == "disableBlizzardCastBar" then
+        chronoUI:EnsureType(newValue, "boolean");
+        
+        if newValue then
+            self:DisableBlizzardCastBar();
+        else
+            self:EnableBlizzardCastBar();
+        end
+    --name == "disableBlizzardCastBar"
+    end
+    
+    self.myDb[name] = newValue;
+end
+
+function Module:DisableBlizzardCastBar()
+    CastingBarFrame.ShowOrig = CastingBarFrame.Show;
+    CastingBarFrame.Show = function() end;
+end
+
+function Module:EnableBlizzardCastBar()
+    if CastingBarFrame.ShowOrig then
+        CastingBarFrame.Show = CastingBarFrame.ShowOrig;
+    end
 end
