@@ -46,9 +46,7 @@ function Module:CreateFrame()
     
     -- Main Window
     do
-        self.frame = CreateFrame("Frame");
-        self.frame:SetWidth(windowWidth);
-        self.frame:SetHeight(windowHeight);
+        self.frame = Gui.makeFrame("Frame", windowWidth, windowHeight);
         self.frame:SetPoint("CENTER", UIParent);
         --self.frame:SetFrameStrata("FULLSCREEN");
         self.frame:RegisterForDrag("LeftButton");
@@ -76,18 +74,13 @@ function Module:CreateFrame()
     
     -- Controls
     do
-        self.frame.close = CreateFrame("Button", nil, self.frame);
-        self.frame.close:SetWidth(24);
-        self.frame.close:SetHeight(24);
+        self.frame.close = Gui.makeFrame("Button", 24, 24, nil, self.frame);
         self.frame.close:SetNormalTexture(chronoUI.imageFolder.."close");
         self.frame.close:SetPushedTexture(chronoUI.imageFolder.."close-highlight");
         self.frame.close:SetPoint("TOPRIGHT", self.frame, -4, -4);
         self.frame.close:SetScript("OnClick", function() self.frame:Hide(); end);
         
-        self.frame.title = self.frame:CreateFontString(nil, "OVERLAY");
-        self.frame.title:SetJustifyH("CENTER");
-        self.frame.title:SetFont(chronoUI.fontFolder.."DroidSansMono.ttf", 32, "OUTLINE");
-        --self.frame.title:SetTextColor(0.74, 0.74, 0.74, 1);
+        self.frame.title = Gui.makeFontString(self.frame, chronoUI.fontFolder.."DroidSansMono.ttf", 32);
         self.frame.title:SetPoint("TOP", self.frame, "TOP", 0, -5);
         self.frame.title:SetText("chronoUI Settings");
                 
