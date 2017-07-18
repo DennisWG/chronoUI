@@ -80,8 +80,8 @@ local function CastBar_Create(self, name, creationParams)
         castBar.frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE");
         castBar.frame:RegisterEvent("UNIT_SPELLCAST_FAILED");
         castBar.frame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
-        self.bar = castBar;
         castBar.frame:Hide();
+        self.bar = castBar;
     end
     
     -- Create Icons and FontStrings
@@ -108,7 +108,7 @@ local function CastBar_Create(self, name, creationParams)
     end
 end
 
-function CastBar:new(name,  creationParams)
+function CastBar:new(name, creationParams)
     local creationParams = creationParams or {};
     creationParams.barTexture = creationParams.barTexture or "cast-bar";
     creationParams.borderTexture = creationParams.borderTexture or "cast-bar-border";
