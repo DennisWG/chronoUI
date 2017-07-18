@@ -4,12 +4,15 @@ _G.chronoUI = Core;
 
 -- initialization
 do
-SLASH_RELOAD1 = "/rl";
+    SLASH_RELOAD1 = "/rl";
     function SlashCmdList.RELOAD()
       ReloadUI();
     end
     
     Core.Modules = {};
+    
+    Core.imageFolder = "Interface\\AddOns\\chronoUI\\img\\";
+    Core.fontFolder = "Interface\\AddOns\\chronoUI\\Fonts\\";
     
     local function Print(...)
         local msg = "";
@@ -86,4 +89,14 @@ end
 -- Returns the module with the given name or nil if no such module exists
 function Core:GetModule(name)
     return self.Modules[name];
-end
+end
+
+function Core:Round(num, numDecimalPlaces)
+    local mult = 10^(numDecimalPlaces or 0);
+    return math.floor(num * mult + 0.5) / mult;
+end
+
+-- Normalizes the given rgba color to a range of 0 - 1
+function Core:NormalizeFromRGBA(r, g, b, a)
+    return { r = r / 255, g = g / 255, b = b / 255, a = a / 255 };
+end
