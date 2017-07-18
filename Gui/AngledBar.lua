@@ -17,22 +17,11 @@ local function AngledBar_Create(self, name, creationParams)
         creationParams.backgroundColor = tmp;
     end
     
-    local makeTex = function(layer, width, height, texture)
-        local t = self.frame:CreateTexture(nil, layer);
-        t:SetHeight(height);
-        t:SetWidth(width);
-        t:SetTexture("Interface\\Addons\\chronoUI\\img\\"..texture);
-        t:SetVertexColor(unpack(creationParams.backgroundColor));
-        return t;
-    end
-    
     local barHeight = creationParams.barHeight;
     
-    local f = CreateFrame("Frame", name, UIParent);
+    local f = Gui.makeFrame("Frame", barWidth, barHeight + 10, name, UIParent);
     f:SetMovable(true);
     f:SetFrameStrata("BACKGROUND");
-    f:SetHeight(barHeight + 10);
-    f:SetWidth(barWidth);
     f:RegisterForDrag("LeftButton");
     f:SetScript("OnDragStart", f.StartMoving);
     f:SetScript("OnDragStop", f.StopMovingOrSizing);
@@ -51,14 +40,15 @@ local function AngledBar_Create(self, name, creationParams)
         overlayTexture = overlayTexture.."-flipped";
     end
 
-    f.background = makeTex("BACKGROUND", barWidth, barHeight, barTexture);
+    
+    f.background = Gui.makeTexture(self.frame, "BACKGROUND", barWidth, barHeight, barTexture, creationParams.backgroundColor);
     f.background:SetPoint("CENTER", f);
-
-    f.overlay = makeTex("OVERLAY", barWidth, barHeight, overlayTexture);
+    
+    f.overlay = Gui.makeTexture(self.frame, "OVERLAY", barWidth, barHeight, overlayTexture, creationParams.backgroundColor);
     f.overlay:SetPoint("RIGHT", f);
     f.overlay:SetVertexColor(0, 0, 0, 1);
     
-    f.bar = makeTex("BORDER", barWidth, barHeight, barTexture);
+    f.bar = Gui.makeTexture(self.frame, "BORDER", barWidth, barHeight, barTexture, creationParams.backgroundColor);
     f.bar:SetPoint("RIGHT", f.background);
     f.bar:SetVertexColor(unpack(creationParams.foregroundColor));
 end

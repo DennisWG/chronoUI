@@ -86,23 +86,23 @@ local function CastBar_Create(self, name, creationParams)
     
     -- Create Icons and FontStrings
     do
-        castBar.frame.icon = castBar.frame:CreateTexture(nil, "OVERLAY");
-        castBar.frame.icon:SetHeight(64);
-        castBar.frame.icon:SetWidth(64);
+        
+        castBar.frame.icon = Gui.makeTexture(castBar.frame, "OVERLAY", 64, 64)
         castBar.frame.icon:SetPoint("BOTTOMRIGHT", castBar.frame, "TOPRIGHT");
         castBar.frame.icon:SetTexture("Interface\\Icons\\Spell_Nature_HealingTouch");
         
-        castBar.frame.name = castBar.frame:CreateFontString(nil, "OVERLAY");
-        castBar.frame.name:SetJustifyH("CENTER");
-        castBar.frame.name:SetFont(creationParams.font, creationParams.fontSize, "OUTLINE");
-        castBar.frame.name:SetTextColor(unpack(creationParams.fontColor));
+        local params = {
+            castBar.frame,
+            creationParams.font,
+            creationParams.fontSize,
+            creationParams.fontColor
+        };
+        
+        castBar.frame.name = Gui.makeFontString(unpack(params));
         castBar.frame.name:SetPoint("RIGHT", castBar.frame.icon, "LEFT", 0, 0);
         castBar.frame.name:SetText("Healing Touch(Rank2)");
         
-        castBar.frame.timer = castBar.frame:CreateFontString(nil, "OVERLAY");
-        castBar.frame.timer:SetJustifyH("CENTER");
-        castBar.frame.timer:SetFont(creationParams.font, creationParams.fontSize, "OUTLINE");
-        castBar.frame.timer:SetTextColor(unpack(creationParams.fontColor));
+        castBar.frame.timer = Gui.makeFontString(unpack(params));
         castBar.frame.timer:SetPoint("RIGHT", castBar.frame, "LEFT", 0, 0);
         castBar.frame.timer:SetText("1.5");
     end

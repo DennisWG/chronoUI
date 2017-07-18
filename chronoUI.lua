@@ -1,3 +1,5 @@
+local gfind = string.gmatch;
+
 local _G = _G or getfenv(0);
 local Core = _G.chronoUI or CreateFrame("Frame");
 _G.chronoUI = Core;
@@ -100,3 +102,19 @@ end
 function Core:NormalizeFromRGBA(r, g, b, a)
     return { r = r / 255, g = g / 255, b = b / 255, a = a / 255 };
 end
+
+    local resolution = GetCVar("gxResolution")
+    for screenwidth, screenheight in gfind(resolution, "(.+)x(.+)") do
+      local scale = (min(2, max(.64, 768/screenheight)))
+      SetCVar("UseUIScale", 1)
+      SetCVar("UIScale", scale)
+
+      -- scale UIParent to native screensize
+      UIParent:SetWidth(screenwidth)
+      UIParent:SetHeight(screenheight)
+      UIParent:SetPoint("CENTER",0,0)
+      end
+
+
+    local clr = 0.1294117647058824;
+    local alpha = 1;

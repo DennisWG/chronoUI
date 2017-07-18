@@ -4,9 +4,7 @@ Gui.TabFrame = TabFrame;
 chronoUI.Gui = Gui;
 
 local function TabFrame_Create(self, name, creationParams)
-    self.frame = CreateFrame("Frame", name, creationParams.parent);
-    self.frame:SetWidth(self.width);
-    self.frame:SetHeight(self.height);
+    self.frame = Gui.makeFrame("Frame", self.width, self.height, name, creationParams.parent);
     
     self.frame:SetBackdrop( { 
         bgFile = chronoUI.imageFolder.."bg-modern",
@@ -49,9 +47,7 @@ end
 function TabFrame:AddTab(name)
     local parent = self.impl.lastTab or self.frame;
     
-    local tab = CreateFrame("Button", name, parent);
-    tab:SetWidth(self.tabWidth);
-    tab:SetHeight(self.tabHeight);
+    local tab = Gui.makeFrame("Button", self.tabWidth, self.tabHeight, name, parent);
     tab:SetNormalTexture(self.normalTexture);
     
     if self.impl.lastTab then
@@ -77,9 +73,7 @@ function TabFrame:AddTab(name)
         newTab.content:Show();
     end);
     
-    tab.title = tab:CreateFontString(nil, "OVERLAY");
-    tab.title:SetJustifyH("CENTER");
-    tab.title:SetFont(chronoUI.fontFolder.."DroidSansMono.ttf", self.fontSize, "OUTLINE");
+    tab.title = Gui.makeFontString(tab, chronoUI.fontFolder.."DroidSansMono.ttf", self.fontSize);
     tab.title:SetPoint("CENTER", tab, "CENTER", 0, 0);
     tab.title:SetText(name);
     
@@ -96,9 +90,7 @@ function TabFrame:AddTab(name)
         offsetY = -self.tabHeight;
     end
     
-    tab.content = CreateFrame("Frame", nil, tab);
-    tab.content:SetWidth(contentWidth);
-    tab.content:SetHeight(contentHeight);
+    tab.content = Gui.makeFrame("Frame", contentWidth, contentHeight, nil, tab);
     tab.content:SetPoint("TOPLEFT", self.frame, "TOPLEFT", offsetX, offsetY);
     
     tab.content:SetBackdrop( { 

@@ -15,23 +15,12 @@ local function UniFrame_Create(self, name, creationParams)
     if not self then error("self == nil") end
     if not name then error("name == nil") end
     
-    local makeFontString = function(parent, params)
-        local f = parent:CreateFontString(nil, "OVERLAY");
-        f:SetJustifyH("CENTER");
-        f:SetFont(params.font, params.fontSize, "OUTLINE");
-        f:SetTextColor(unpack(params.fontColor));
-        return f;
-    end
-    
-    local f = CreateFrame("Button", name, UIParent, "SecureUnitButtonTemplate");
+    local f = Gui.makeFrame("Button", frameWidth, frameHeight, name, UIParent, "SecureUnitButtonTemplate");
     
     -- Initialize f
     do
         f:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", add);
         f:SetFrameStrata("BACKGROUND");
-        
-        f:SetWidth(frameWidth);
-        f:SetHeight(frameHeight);
         f:SetScale(creationParams.scale);
         
         f:RegisterForDrag("LeftButton");
@@ -69,7 +58,12 @@ local function UniFrame_Create(self, name, creationParams)
         local inset = 0;
         if creationParams.powerBar.isShort then inset = -14; end
         
-        f.power = makeFontString(powerBar.frame, creationParams.powerBar);
+        f.power = Gui.makeFontString(
+            powerBar.frame,
+            creationParams.powerBar.font,
+            creationParams.powerBar.fontSize,
+            creationParams.powerBar.fontColor
+        );
         powerBar.frame:SetPoint("TOP", hpBar.frame, "BOTTOM", inset, 0);
         powerBar:SetBarPercentage(75);
         f.powerBar = powerBar;
@@ -77,15 +71,21 @@ local function UniFrame_Create(self, name, creationParams)
 
     -- Initialize FontStrings
     do
-        f.name = makeFontString(hpBar.frame, creationParams.hpBar);
+        local params = {
+            powerBar.frame,
+            creationParams.hpBar.font,
+            creationParams.hpBar.fontSize,
+            creationParams.hpBar.fontColor
+        };
+        f.name = Gui.makeFontString(unpack(params));
         f.name:SetPoint("RIGHT", hpBar.frame, "RIGHT", 0, 32);
         f.name:SetText(UnitName("player"));
         
-        f.level = makeFontString(hpBar.frame, creationParams.hpBar);
+        f.level = Gui.makeFontString(unpack(params));
         f.level:SetPoint("RIGHT", f.name, "LEFT", 0, 0);
         f.level:SetText(UnitLevel("player").." - ");
         
-        f.hp = makeFontString(hpBar.frame, creationParams.hpBar);
+        f.hp = Gui.makeFontString(unpack(params));
         f.hp:SetPoint("LEFT", hpBar.frame, "LEFT", 50, 0);
         
         f.power:SetPoint("LEFT", powerBar.frame, "LEFT", 120, 0);
