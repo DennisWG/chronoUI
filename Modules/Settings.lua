@@ -32,71 +32,6 @@ function Module:ADDON_LOADED(name)
     self:Print("Settings loaded");
 end
 
-function Module:OpenProfiles()
-    self:Print("Module:OpenProfiles()");
-end
-
-function Module:OpenPlayer()
-    if not self.ProfilesWindow then
-        local params = {
-            --topToBottom = true,
-            parent = self.frame,
-            width = windowWidth - panelWidth,
-            height = windowHeight - titleHeight,
-            normalTexture = chronoUI.imageFolder.."Settings\\normal",
-            selectedTexture = chronoUI.imageFolder.."Settings\\selected",
-            tabWidth = 128,
-            tabHeight = 32,
-        };
-        self.ProfilesWindow = chronoUI.Gui.TabFrame:new(nil, params);
-        self.ProfilesWindow.frame:SetPoint("TOPLEFT", self.frame, "TOPLEFT", panelWidth + 1, -titleHeight - 1);
-        
-        self.ProfilesWindow:AddTab("Testing");
-        self.ProfilesWindow:AddTab("Foo");
-        self.ProfilesWindow:AddTab("Bar");
-    end
-    
-    if self.ProfilesWindow.frame:IsVisible() then
-        return;
-    end
-    
-    self.ProfilesWindow.frame:Show();
-    
-    self:Print("Module:OpenPlayer()");
-end
-
-function Module:CreateCategory(name)
-    self.frame[name] = CreateFrame("Button", nil, self.frame);
-    self.frame[name]:SetWidth(128);
-    self.frame[name]:SetHeight(32);
-    self.frame[name]:SetNormalTexture(chronoUI.imageFolder.."Settings\\normal");
-    
-    self.frame[name].title = self.frame[name]:CreateFontString(nil, "OVERLAY");
-    self.frame[name].title:SetJustifyH("CENTER");
-    self.frame[name].title:SetFont(chronoUI.fontFolder.."DroidSansMono.ttf", 32, "OUTLINE");
-    self.frame[name].title:SetPoint("LEFT", self.frame[name], "LEFT", 4, 0);
-    self.frame[name].title:SetText(name);
-    
-    if not self.lastButton then
-        self.frame[name]:SetPoint("TOPLEFT", self.frame, 0, -titleHeight - 1);
-    else
-        self.frame[name]:SetPoint("TOP", self.lastButton, "BOTTOM", 0, 1);
-    end
-    
-    self.frame[name]:SetScript("OnClick", function()
-        if self.selectedCategory then
-            self.frame[self.selectedCategory]:SetNormalTexture(chronoUI.imageFolder.."Settings\\normal");
-        end
-        
-        self.selectedCategory = name;
-        self.frame[name]:SetNormalTexture(chronoUI.imageFolder.."Settings\\selected");
-        
-        self["Open"..name](self);
-    end);
-    
-    self.lastButton = self.frame[name];
-end
-
 function Module:CreateFrame()
     local makeSeperator = function(width, height, texture)
         local texture = chronoUI.imageFolder..texture;
@@ -155,12 +90,7 @@ function Module:CreateFrame()
         --self.frame.title:SetTextColor(0.74, 0.74, 0.74, 1);
         self.frame.title:SetPoint("TOP", self.frame, "TOP", 0, -5);
         self.frame.title:SetText("chronoUI Settings");
-        
-        --[[
-        self:CreateCategory("Profiles");
-        self:CreateCategory("Player");
-        ]]
-        
+                
         -- Tab View
         do
             local params = {
@@ -205,6 +135,8 @@ function Module:CreateFrame()
                 local t = content.view:AddTab("Hp Bar");
                 local t = content.view:AddTab("Power Bar");
                 local t = content.view:AddTab("Cast Bar");
+                
+                content.view:SelectTab("General");
             end
             
             self.tabView:SelectTab("Player");
